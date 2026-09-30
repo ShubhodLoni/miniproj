@@ -1,0 +1,4 @@
+timestamp,sender,subject,risk_score,classification,threat_type
+2026-51-09/30/26 20-09-38,security@microsoft-account-verify.com,Urgent: Your Microsoft Account Will Be Suspended Today,8,Phishing,Credential Theft via Phishing
+2026-53-09/30/26 20-09-08,security@microsoft-account-verify.com,Urgent: Your Microsoft Account Will Be Suspended Today,8,Phishing,Credential Phishing
+2026-53-09/30/26 20-09-29,security@microsoft-account-verify.com,Urgent: Your Microsoft Account Will Be Suspended Today,9,Phishing,Credential Harvesting
