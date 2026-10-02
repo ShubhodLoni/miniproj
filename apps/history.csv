@@ -1,0 +1,10 @@
+timestamp,sender,subject,risk_score,classification,threat_type
+2026-32-10/01/26 21-10-30,hr@jpmorgan.com,,1,Possible Phishing / Impersonation,Impersonation
+2026-33-10/01/26 21-10-56,hr@jpmorgan.com,,0,Legitimate,
+2026-34-10/01/26 21-10-05,hr@jpmorgan.com,,4,Suspicious email,Phishing / Social Engineering
+2026-14-10/02/26 00-10-00,Google <no-reply@accounts.google.com>,Security alert,3,Suspicious email,Phishing attempt
+2026-10-02 16:01:47,hr@jpmorgan.com,,1,Suspicious,None
+2026-10-02 16:18:16,hr@jpmorgan.com,,3,Suspicious,Social engineering
+2026-10-02 16:23:27,hr@jpmorgan.com,,1,Low Risk,None
+2026-10-02 16:23:49,hr@jpmorgan.com,,8,Suspicious Email,Phishing
+2026-10-02 16:25:25,hr@jpmorgan.com,,5,Phishing,Impersonation / Social Engineering
