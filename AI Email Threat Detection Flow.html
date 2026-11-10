@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Email Threat Detection Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --text: #f5f7fa; --muted: #9aa4b2; --blue: #3d8bff; --tag: #6ea8ff;
+    --green: #22c55e; --red: #ff4d4d;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: inherit; }
+  body {
+    margin: 0; background: #000; color: var(--text);
+    font-family: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh; padding: 28px clamp(16px, 4vw, 48px) 40px;
+  }
+  header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 32px; margin-bottom: 18px; }
+  h1 { font-size: 20px; font-weight: 600; margin: 0; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .sw { width: 14px; height: 14px; border-radius: 4px; border: 2px solid; }
+  .sw.g { border-color: var(--green); } .sw.r { border-color: var(--red); }
+  .ln { width: 22px; height: 2px; background: var(--blue); box-shadow: 0 0 8px 1px var(--blue); }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 1250px; height: auto; }
+  #info { margin-top: 16px; padding: 14px 18px; border: 1px solid #1b2230; border-radius: 12px; font-size: 14px; line-height: 1.6; color: var(--muted); min-height: 52px; }
+  #info b { color: var(--text); font-weight: 600; margin-right: 8px; }
+
+  .edge { fill: none; stroke: var(--blue); stroke-width: 2; stroke-dasharray: 6 8; filter: url(#glow); animation: flow .9s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -28; } }
+  .dot { fill: #bcd9ff; filter: url(#glow); }
+
+  .nd { cursor: pointer; outline: none; }
+  .node { fill: #000; stroke-width: 1.75; transition: filter .25s ease, fill .25s ease, stroke-width .25s ease; }
+  .go .node { stroke: var(--green); filter: drop-shadow(0 0 4px rgba(34,197,94,.35)); }
+  .end .node { stroke: var(--red); filter: drop-shadow(0 0 4px rgba(255,77,77,.35)); }
+  .go:hover .node, .go:focus-visible .node { fill: rgba(34,197,94,.08); stroke-width: 2.6; filter: drop-shadow(0 0 6px rgba(34,197,94,.9)) drop-shadow(0 0 18px rgba(34,197,94,.7)); }
+  .end:hover .node, .end:focus-visible .node { fill: rgba(255,77,77,.08); stroke-width: 2.6; filter: drop-shadow(0 0 6px rgba(255,77,77,.9)) drop-shadow(0 0 18px rgba(255,77,77,.7)); }
+  .t { fill: var(--text); font-size: 15px; font-weight: 600; }
+  .s { fill: var(--muted); font-size: 12px; }
+  .g2 { fill: var(--tag); font-size: 11px; }
+  .c { text-anchor: middle; }
+  .pill { fill: #000; stroke: #1b2230; }
+  .pl { fill: var(--text); font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+  svg text { pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .edge { animation: none; } .dot { display: none; } .node { transition: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI email threat detection flow</h1>
+  <div class="legend">
+    <span><i class="sw g"></i>Continues</span>
+    <span><i class="sw r"></i>Terminates</span>
+    <span><i class="ln"></i>Data flow</span>
+  </div>
+</header>
+
+<div class="scroll">
+<svg id="chart" viewBox="0 0 1650 760" role="img" aria-label="Flowchart of the email threat detection pipeline from inbox through n8n, FastAPI, Groq LLM, risk scoring and database to alerts, dashboard review or automated reply.">
+  <defs>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="grid-s" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0 H0 V20" fill="none" stroke="#3d8bff" stroke-opacity=".07" stroke-width="1"/></pattern>
+    <pattern id="grid-l" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M100 0 H0 V100" fill="none" stroke="#3d8bff" stroke-opacity=".16" stroke-width="1"/></pattern>
+    <radialGradient id="fade" cx="50%" cy="50%" r="75%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".85"/></radialGradient>
+    <marker id="arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3d8bff"/></marker>
+  </defs>
+  <rect width="1650" height="760" fill="url(#grid-s)"/>
+  <rect width="1650" height="760" fill="url(#grid-l)"/>
+  <rect width="1650" height="760" fill="url(#fade)"/>
+  <g id="edges"></g><g id="dots"></g><g id="pills"></g><g id="nodes"></g>
+</svg>
+</div>
+<div id="info" aria-live="polite">Hover or focus a step to see what it does.</div>
+
+<script>
+// [type, x, y, w, h, title, sub, tag, info]  type: go | end | dec
+const N = [
+  ['go',  40, 80,200,92,'Email inbox','Gmail and Outlook APIs','OAuth read access','A new email lands in the monitored Gmail or Outlook inbox. Access goes through the Gmail API or Outlook API using OAuth.'],
+  ['go', 300, 80,200,92,'n8n trigger','New email fires webhook','Workflow automation','n8n watches the inbox and starts the workflow the moment a new email arrives.'],
+  ['go', 560, 80,200,92,'Email extraction','Sender, links and body','Parsed in n8n','The workflow pulls out the sender, headers, subject, body text and every link so the AI has clean input.'],
+  ['go', 820, 80,200,92,'FastAPI service','POST /analyze endpoint','Python backend','n8n sends the extracted email to the Python FastAPI service, which runs the analysis pipeline.'],
+  ['go',1080, 80,200,92,'Load API key','GROQ_API_KEY from .env','Secret stays server-side','The backend reads GROQ_API_KEY from its environment file. The key is never exposed to the browser or the dashboard.'],
+  ['go',1340, 80,200,92,'LangChain prompt','Threat prompt, JSON output','Structured response','LangChain builds the prompt for phishing, spoofing, malicious links and social engineering, and asks for a JSON answer.'],
+  ['go',  40,300,200,92,'Groq LLM','Phishing and scam check','Groq API call','The prompt is sent to the Groq API, where the LLM evaluates the email for threats.'],
+  ['dec',320,290,210,112,'Groq call|succeeded?','','','Checks the Groq response. A rejected key, exceeded quota or timeout takes the No path.'],
+  ['go', 600,300,200,92,'Explainable report','Reasons behind each flag','JSON for the dashboard','The model returns its reasons, so every score comes with a plain explanation of what looked suspicious.'],
+  ['go', 860,300,200,92,'Risk scoring','Score from 0 to 10','Risk scoring engine','The risk scoring engine turns the findings into a single score from 0 to 10.'],
+  ['go',1120,300,200,92,'Classification','Safe, Low, Medium, High','Critical at 9 to 10','The score is mapped to a level: 0 Safe, 1–3 Low, 4–6 Medium, 7–8 High, 9–10 Critical.'],
+  ['end',325,520,200,92,'Error handler','Bad key, quota or timeout','Logged, email held','If the Groq call fails, the error is logged and the email is held back for a retry or manual check. The flow stops here.'],
+  ['go', 800,520,200,92,'Database','Stores score and reasons','PostgreSQL','The email details, risk score, level and explanation are saved in PostgreSQL.'],
+  ['dec',1080,510,210,112,'Risk|level?','','','Routes the email by its stored risk level.'],
+  ['end',1400,410,200,92,'Security alert','Alert sent, no auto reply','Risk 7 to 10','High and critical emails trigger a security alert and get no automated response. The flow ends here.'],
+  ['end',1400,520,200,92,'Dashboard review','Flagged for a person','Next.js and Tailwind CSS','Medium risk emails appear on the monitoring dashboard for someone to review. The flow ends here.'],
+  ['end',1400,630,200,92,'Automated reply','Reply sent through n8n','Gmail or Outlook API','Safe and low risk emails get an automated response, and the result is shown on the dashboard. The flow ends here.']
+];
+// [id, path, label?]  label: [x, y, text, width]
+const E = [
+  ['M240 126 H300'], ['M500 126 H560'], ['M760 126 H820'], ['M1020 126 H1080'], ['M1280 126 H1340'],
+  ['M1440 172 V220 Q1440 236 1424 236 H156 Q140 236 140 252 V300'],
+  ['M240 346 H320'],
+  ['M530 346 H600', [565,346,'Yes',38]],
+  ['M425 402 V520', [425,461,'No',34]],
+  ['M800 346 H860'], ['M1060 346 H1120'],
+  ['M1220 392 V434 Q1220 450 1204 450 H916 Q900 450 900 466 V520'],
+  ['M1000 566 H1080'],
+  ['M1290 566 C1345 566 1345 456 1400 456', [1345,511,'7–10',46]],
+  ['M1290 566 H1400', [1345,566,'4–6',40]],
+  ['M1290 566 C1345 566 1345 676 1400 676', [1345,621,'0–3',40]]
+];
+const $ = id => document.getElementById(id);
+let eh = '', dh = '', ph = '';
+E.forEach((e, i) => {
+  eh += `<path id="e${i}" class="edge" marker-end="url(#arrow)" d="${e[0]}"/>`;
+  dh += `<circle class="dot" r="3.5"><animateMotion dur="2.2s" begin="${(i % 6) * 0.35}s" repeatCount="indefinite"><mpath href="#e${i}"/></animateMotion></circle>`;
+  if (e[1]) { const [x, y, t, w] = e[1]; ph += `<rect class="pill" x="${x - w / 2}" y="${y - 10}" width="${w}" height="20" rx="10"/><text class="pl" x="${x}" y="${y + 4}">${t}</text>`; }
+});
+let nh = '';
+N.forEach((n, i) => {
+  const [type, x, y, w, h, title, sub, tag] = n;
+  const cls = type === 'end' ? 'end' : 'go';
+  let body;
+  if (type === 'dec') {
+    const cx = x + w / 2, cy = y + h / 2, L = title.split('|');
+    body = `<polygon class="node" points="${cx},${y} ${x + w},${cy} ${cx},${y + h} ${x},${cy}"/>` +
+      L.map((l, k) => `<text class="t c" x="${cx}" y="${cy + (k - (L.length - 1) / 2) * 19 + 5}">${l}</text>`).join('');
+  } else {
+    body = `<rect class="node" x="${x}" y="${y}" width="${w}" height="${h}" rx="12"/>` +
+      `<text class="t" x="${x + 20}" y="${y + 34}">${title}</text>` +
+      `<text class="s" x="${x + 20}" y="${y + 56}">${sub}</text>` +
+      `<text class="g2" x="${x + 20}" y="${y + 76}">${tag}</text>`;
+  }
+  nh += `<g class="nd ${cls}" data-i="${i}" tabindex="0">${body}</g>`;
+});
+$('edges').innerHTML = eh; $('dots').innerHTML = dh; $('pills').innerHTML = ph; $('nodes').innerHTML = nh;
+
+const info = $('info'), idle = info.textContent;
+function show(g) { const n = N[g.dataset.i]; info.innerHTML = `<b>${n[5].replace('|', ' ')}</b>${n[8]}`; }
+document.querySelectorAll('.nd').forEach(g => {
+  g.addEventListener('mouseenter', () => show(g));
+  g.addEventListener('focus', () => show(g));
+  g.addEventListener('mouseleave', () => info.textContent = idle);
+  g.addEventListener('blur', () => info.textContent = idle);
+});
+</script>
+</body>
+</html>

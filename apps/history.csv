@@ -8,3 +8,4 @@ timestamp,sender,subject,risk_score,classification,threat_type
 2026-10-02 16:23:27,hr@jpmorgan.com,,1,Low Risk,None
 2026-10-02 16:23:49,hr@jpmorgan.com,,8,Suspicious Email,Phishing
 2026-10-02 16:25:25,hr@jpmorgan.com,,5,Phishing,Impersonation / Social Engineering
+2026-10-02 16:30:52,hr@jpmorgan.com,,1,Low Risk,Impersonation
