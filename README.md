@@ -110,6 +110,7 @@ to create a practical email security assistant for individuals and organizations
 **Developed by:** Shubhod Loni, Suraj M N
 GitHub: [ShubhodLoni](https://github.com/ShubhodLoni?utm_source=google.com)
         [Suraj-M-N](https://github.com/SURAJ-M-N)
+        [vijay R](https://github.com/viji95632)
 
 
 
