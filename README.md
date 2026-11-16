@@ -66,8 +66,7 @@ Automated Response
 
 ### Frontend
 
-* Next.js
-* Tailwind CSS
+*StreamLit
 
 ### Integrations
 
